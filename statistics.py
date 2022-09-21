@@ -25,25 +25,27 @@ for scenario in scenarios:
         sum_x += np.sum(img[:, :, 0])
         sum_x2 += np.sum(img[:, :, 0] ** 2)
         mean_x = sum_x / count_x
-        var_x = sum_x2 / count_x - mean_x ** 2
+        var_x = sum_x2 / count_x - mean_x**2
 
         count_y += img[:, :, 1].reshape(-1).shape[0]
         sum_y += np.sum(img[:, :, 1])
         sum_y2 += np.sum(img[:, :, 1] ** 2)
         mean_y = sum_y / count_y
-        var_y = sum_y2 / count_y - mean_y ** 2
+        var_y = sum_y2 / count_y - mean_y**2
 
         count_z += img[:, :, 2].reshape(-1).shape[0]
         sum_z += np.sum(img[:, :, 2])
         sum_z2 += np.sum(img[:, :, 2] ** 2)
         mean_z = sum_z / count_z
-        var_z = sum_z2 / count_z - mean_z ** 2
+        var_z = sum_z2 / count_z - mean_z**2
 
     mean[scenario] = np.array([mean_x, mean_y, mean_z])
     var[scenario] = np.array([var_x, var_y, var_z])
 
     print(scenario)
-    print(f'mean: [{mean_x:1.3f},{mean_y:1.3f},{mean_z:1.3f}], var: [{var_x:1.3f},{var_y:1.3f},{var_z:1.3f}]')
+    print(
+        f"mean: [{mean_x:1.3f},{mean_y:1.3f},{mean_z:1.3f}], var: [{var_x:1.3f},{var_y:1.3f},{var_z:1.3f}]"
+    )
     print()
 
 # ConcepCap 0.00 TXT 0.00

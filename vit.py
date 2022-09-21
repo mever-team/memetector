@@ -17,7 +17,7 @@ class Patches(layers.Layer):
 
     def get_config(self):
         config = super().get_config().copy()
-        config.update({'patch_size': self.patch_size})
+        config.update({"patch_size": self.patch_size})
         return config
 
     def call(self, images):
@@ -39,16 +39,24 @@ class PatchEncoder(layers.Layer):
         super(PatchEncoder, self).__init__()
         self.projection_dim = projection_dim
         self.projection = layers.Dense(units=projection_dim)
-        self.class_token = tf.Variable(initial_value=tf.zeros_initializer()(shape=(1, 1, projection_dim), dtype='float32'), trainable=True)
+        self.class_token = tf.Variable(
+            initial_value=tf.zeros_initializer()(
+                shape=(1, 1, projection_dim), dtype="float32"
+            ),
+            trainable=True,
+        )
 
     def get_config(self):
         config = super().get_config().copy()
-        config.update({'projection_dim': self.projection_dim})
+        config.update({"projection_dim": self.projection_dim})
         return config
 
     def call(self, patch):
         batch_size = tf.shape(patch)[0]
-        cls_broadcasted = tf.cast(tf.broadcast_to(self.class_token, [batch_size, 1, self.projection_dim]), dtype=patch.dtype)
+        cls_broadcasted = tf.cast(
+            tf.broadcast_to(self.class_token, [batch_size, 1, self.projection_dim]),
+            dtype=patch.dtype,
+        )
         return tf.concat([cls_broadcasted, self.projection(patch)], 1)
 
 
@@ -57,24 +65,40 @@ class PositionalEmbedding(layers.Layer):
         super(PositionalEmbedding, self).__init__()
         self.projection_dim = projection_dim
         self.num_patches = num_patches
-        self.position_embedding = layers.Embedding(input_dim=num_patches + 1, output_dim=projection_dim)
+        self.position_embedding = layers.Embedding(
+            input_dim=num_patches + 1, output_dim=projection_dim
+        )
 
     def get_config(self):
         config = super().get_config().copy()
-        config.update({'projection_dim': self.projection_dim,
-                       'num_patches': self.num_patches})
+        config.update(
+            {"projection_dim": self.projection_dim, "num_patches": self.num_patches}
+        )
         return config
 
     def call(self, patch):
         positions = tf.range(start=0, limit=self.num_patches + 1, delta=1)
         batch_size = tf.shape(patch)[0]
-        embs = tf.cast(tf.broadcast_to(self.position_embedding(positions),
-                                       [batch_size, self.num_patches + 1, self.projection_dim]),
-                       dtype=patch.dtype)
+        embs = tf.cast(
+            tf.broadcast_to(
+                self.position_embedding(positions),
+                [batch_size, self.num_patches + 1, self.projection_dim],
+            ),
+            dtype=patch.dtype,
+        )
         return patch + embs
 
 
-def vit(input_shape, patch_size, projection_dim, num_patches, transformer_layers, num_heads, transformer_units, mlp_head_units):
+def vit(
+    input_shape,
+    patch_size,
+    projection_dim,
+    num_patches,
+    transformer_layers,
+    num_heads,
+    transformer_units,
+    mlp_head_units,
+):
     # Get inputs
     inputs = layers.Input(shape=input_shape)
     # Create patches.
@@ -88,7 +112,9 @@ def vit(input_shape, patch_size, projection_dim, num_patches, transformer_layers
         # Layer normalization 1.
         x1 = layers.LayerNormalization(epsilon=1e-6)(z)
         # Create a multi-head attention layer.
-        attention_output = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1)(x1, x1)
+        attention_output = layers.MultiHeadAttention(
+            num_heads=num_heads, key_dim=projection_dim, dropout=0.1
+        )(x1, x1)
         # Skip connection 1.
         x2 = layers.Add()([attention_output, z])
         # Layer normalization 2.
@@ -104,13 +130,22 @@ def vit(input_shape, patch_size, projection_dim, num_patches, transformer_layers
     # Add MLP.
     features = mlp(y, hidden_units=mlp_head_units, dropout_rate=0.5)
     # Classify outputs.
-    output = layers.Dense(1, activation='sigmoid')(features)
+    output = layers.Dense(1, activation="sigmoid")(features)
     # Create the Keras model.
     model = keras.Model(inputs=inputs, outputs=output)
     return model
 
 
-def vita(input_shape, patch_size, projection_dim, num_patches, transformer_layers, num_heads, transformer_units, mlp_head_units):
+def vita(
+    input_shape,
+    patch_size,
+    projection_dim,
+    num_patches,
+    transformer_layers,
+    num_heads,
+    transformer_units,
+    mlp_head_units,
+):
     # Get inputs
     inputs = layers.Input(shape=input_shape)
     # Create patches.
@@ -125,7 +160,9 @@ def vita(input_shape, patch_size, projection_dim, num_patches, transformer_layer
         # Layer normalization 1.
         x1 = layers.LayerNormalization(epsilon=1e-6)(z)
         # Create a multi-head attention layer.
-        attention_output = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1)(x1, x1)
+        attention_output = layers.MultiHeadAttention(
+            num_heads=num_heads, key_dim=projection_dim, dropout=0.1
+        )(x1, x1)
         # Skip connection 1.
         x2 = layers.Add()([attention_output, z])
         # Layer normalization 2.
@@ -144,14 +181,19 @@ def vita(input_shape, patch_size, projection_dim, num_patches, transformer_layer
     attention = layers.Dense(1)
     G = []
     for i, z in enumerate(Z):
-        c = attention(tf.concat([tf.stack([y for _ in range(num_patches)], axis=1), z[:, 1:, :]], axis=-1))
+        c = attention(
+            tf.concat(
+                [tf.stack([y for _ in range(num_patches)], axis=1), z[:, 1:, :]],
+                axis=-1,
+            )
+        )
         alpha = tf.nn.softmax(c, axis=1)
         g = tf.reduce_sum(alpha * z[:, 1:, :], axis=1)
         G.append(g)
     # Add MLP.
     features = mlp(tf.concat(G, axis=-1), hidden_units=mlp_head_units, dropout_rate=0.5)
     # Classify outputs.
-    output = layers.Dense(1, activation='sigmoid')(features)
+    output = layers.Dense(1, activation="sigmoid")(features)
     # Create the Keras model.
     model = keras.Model(inputs=inputs, outputs=output)
     return model
