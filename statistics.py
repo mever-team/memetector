@@ -1,4 +1,4 @@
-import split
+from split import split
 from PIL import Image
 import numpy as np
 
