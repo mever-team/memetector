@@ -7,6 +7,7 @@ The preprint can be found here: https://arxiv.org/abs/2205.13268
 
 ![](https://github.com/mever-team/memetector/blob/main/docs/Figure%202.png)
 
+
 ## Guidelines
 1. Download the memetector repository:
 ```
