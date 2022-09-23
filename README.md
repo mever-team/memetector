@@ -20,9 +20,12 @@ and extract all the 10K images in data/meme folder
 3. Setup two conda environments following [environment.md](docs/environment.md)
 4. Run the [vpu.py](vpu.py) script in order to extract the visual parts of the memes of 
 data/meme folder and store them in the data/cropped folder (using the text detection environment)
-5. Download the randomly selected web-scraped images (from [Google's Conceptual Captions](https://ai.google.com/research/ConceptualCaptions/) dataset)
+5. Download the randomly selected web-scraped images 
+(from [Google's Conceptual Captions](https://ai.google.com/research/ConceptualCaptions/) dataset)
 using their URLs in the files [urls_text_absence.csv](data/urls_text_absence.csv) and
-[urls_text_presence.csv](data/urls_text_presence.csv) and place them in the corresponding subfolders of data/web folder
+[urls_text_presence.csv](data/urls_text_presence.csv) (note that keeping the same filenames is crucial
+for the creation of identical spilts)
+and place them in the corresponding subfolders of data/web folder
 (text_absence and text_presence). - *These files have been selected from the whole dataset
 by the use of text.py*
 6. For reproducing the experiments run the train.py file
