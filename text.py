@@ -26,7 +26,7 @@ def setup_cfg(args):
 
 
 def get_parser():
-    base_dir = "/home/ckoutlis/ModelStorage/TextFuseNet"
+    base_dir = "./TextFuseNet"
     parser = argparse.ArgumentParser(description="Detectron2 Demo")
     parser.add_argument(
         "--config-file",

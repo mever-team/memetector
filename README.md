@@ -28,6 +28,17 @@ by the use of text.py*
 6. For reproducing the experiments run the train.py file
 7. For reproducing the results presented in the paper run the results.py file
 
+## Citation
+If you use this code for your research, please cite our paper.
+```
+@article{koutlis2022memetector,
+  title     = {MemeTector: Enforcing deep focus for meme detection},
+  author    = {Koutlis, Christos and Schinas, Manos and Papadopoulos, Symeon},
+  journal   = {arXiv preprint arXiv:2205.13268},
+  year      = {2022},
+}
+```
+
 ## Acknowledgements
 This work is partially funded by the
 Horizon 2020 European project "MediaVerse: A universe of media assets and co-creation opportunities at your fingertips"

@@ -1,3 +1,5 @@
+# The code that we used as starting point for our implementation can be found here:
+# https://github.com/keras-team/keras-io/blob/master/examples/vision/image_classification_with_vision_transformer.py
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers

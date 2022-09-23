@@ -2,7 +2,7 @@ from split import split
 from PIL import Image
 import numpy as np
 
-TRAIN, VAL, TEST = split()
+TRAIN, _, _ = split()
 scenarios = list(TRAIN.keys())
 
 mean = {}

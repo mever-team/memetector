@@ -119,7 +119,6 @@ files = [
     os.path.join(imgdir, x) for x in os.listdir(imgdir) if (".jpg" in x or ".png" in x)
 ]
 n = len(files)
-Boxes1D = {}
 start = time.time()
 counter = 0
 p_sum = 0

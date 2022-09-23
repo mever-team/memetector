@@ -1,8 +1,11 @@
 # memetector environment
 In order to run the files that use text detection (vpu.py, text.py),
-you need to build the environment of TextFuseNet through the guidelines
-in https://github.com/ying09/TextFuseNet. For the rest (model training & results)
-you can use the following environment:
+you need to build the environment of [TextFuseNet](https://github.com/ying09/TextFuseNet)
+through the guidelines provided [here](https://github.com/ying09/TextFuseNet/blob/master/step-by-step%20installation.txt).
+Please clone the TextFuseNet repo in memetector folder.
+If you choose another directory you should also update the base_dir variable
+in vpu.py and text.py. For the rest scripts (pertinent to model training & results)
+you can build and use the following environment:
 ```
 conda create -n memetector python=3.8
 conda activate memetector

@@ -82,20 +82,33 @@ category = {0: "regular", 1: "meme"}
 transparency = 0.7  # 0.4
 _, _, TEST = split(showtxt=False)
 
-np.random.seed(12)  # 3, 11, 12
-memes = np.random.permutation(
-    [x[0] for x in TEST["ConcepCap 0.67 TXT 0.33"] if x[2] == "HM"]
-)
-np.random.seed(3)  # 2,3
-regulars_wotxt = np.random.permutation(
-    [x[0] for x in TEST["ConcepCap 0.67 TXT 0.33"] if x[2] == "CC-wotxt"]
-)
-np.random.seed(3)
-regulars_wtxt = np.random.permutation(
-    [x[0] for x in TEST["ConcepCap 0.67 TXT 0.33"] if x[2] == "CC-wtxt"]
-)[
-    [1, 3, 15, 18, 31]
-]  # 23,26
+memes = [
+    "./data/meme/96231.png",
+    "./data/meme/95048.png",
+    "./data/meme/98103.png",
+    "./data/meme/98642.png",
+    "./data/meme/94678.png",
+    "./data/meme/90875.png",
+    "./data/meme/94560.png",
+    "./data/meme/93468.png",
+    "./data/meme/90632.png",
+    "./data/meme/93280.png",
+]
+regulars_wotxt = [
+    "./data/web/text_absence/img_3092410.jpg",
+    "./data/web/text_absence/img_3143070.jpg",
+    "./data/web/text_absence/img_2629917.jpg",
+    "./data/web/text_absence/img_3179606.jpg",
+    "./data/web/text_absence/img_0906273.jpg",
+]
+regulars_wtxt = [
+    "./data/web/text_presence/img_1380072.jpg",
+    "./data/web/text_presence/img_1796174.jpg",
+    "./data/web/text_presence/img_2225718.jpg",
+    "./data/web/text_presence/img_1645037.jpg",
+    "./data/web/text_presence/img_0559645.jpg",
+]
+
 
 ckpt = f"ckpt/{scenario} ViTa.h5"
 model = tensorflow.keras.models.load_model(
@@ -120,8 +133,8 @@ model = Model(
 
 plt.figure(figsize=(10, 7.9))
 
-i = 1
-for meme in memes:
+# Memes
+for i, meme in enumerate(memes):
     imgshow = cv2.resize(
         np.array(Image.open(meme)), dsize=(250, 250), interpolation=cv2.INTER_CUBIC
     )
@@ -132,28 +145,21 @@ for meme in memes:
         interpolation=cv2.INTER_CUBIC,
     )
     output = model.predict(np.expand_dims(imgpred, axis=0))
-    prob = output[0][0][0]
-    pred = category[int(prob > 0.5)]
-
     attention = (output[1] + output[2] + output[3] + output[4]) / 4
 
-    if pred == "meme" and i <= 10:
-        plt.subplot(4, 5, i)
-        h = plt.imshow(imgshow)
-        plt.imshow(
-            np.resize(attention, (10, 10)),
-            cmap="jet",
-            alpha=transparency,
-            extent=h.get_extent(),
-            interpolation="bilinear",
-        )
-        plt.axis("off")
-        i += 1
-        if i > 10:
-            break
+    plt.subplot(4, 5, 1 + i)
+    h = plt.imshow(imgshow)
+    plt.imshow(
+        np.resize(attention, (10, 10)),
+        cmap="jet",
+        alpha=transparency,
+        extent=h.get_extent(),
+        interpolation="bilinear",
+    )
+    plt.axis("off")
 
-i = 1
-for regular in regulars_wotxt:
+# Web - text absence
+for i, regular in enumerate(regulars_wotxt):
     imgshow = cv2.resize(
         np.array(Image.open(regular)), dsize=(250, 250), interpolation=cv2.INTER_CUBIC
     )
@@ -164,28 +170,21 @@ for regular in regulars_wotxt:
         interpolation=cv2.INTER_CUBIC,
     )
     output = model.predict(np.expand_dims(imgpred, axis=0))
-    prob = output[0][0][0]
-    pred = category[int(prob > 0.5)]
-
     attention = (output[1] + output[2] + output[3] + output[4]) / 4
 
-    if pred == "regular" and i <= 5:
-        plt.subplot(4, 5, 10 + i)
-        h = plt.imshow(imgshow)
-        plt.imshow(
-            np.resize(attention, (10, 10)),
-            cmap="jet",
-            alpha=transparency,
-            extent=h.get_extent(),
-            interpolation="bilinear",
-        )
-        plt.axis("off")
-        i += 1
-        if i > 5:
-            break
+    plt.subplot(4, 5, 11 + i)
+    h = plt.imshow(imgshow)
+    plt.imshow(
+        np.resize(attention, (10, 10)),
+        cmap="jet",
+        alpha=transparency,
+        extent=h.get_extent(),
+        interpolation="bilinear",
+    )
+    plt.axis("off")
 
-i = 1
-for regular in regulars_wtxt:
+# Web - text presence
+for i, regular in enumerate(regulars_wtxt):
     imgshow = cv2.resize(
         np.array(Image.open(regular)), dsize=(250, 250), interpolation=cv2.INTER_CUBIC
     )
@@ -196,25 +195,18 @@ for regular in regulars_wtxt:
         interpolation=cv2.INTER_CUBIC,
     )
     output = model.predict(np.expand_dims(imgpred, axis=0))
-    prob = output[0][0][0]
-    pred = category[int(prob > 0.5)]
-
     attention = (output[1] + output[2] + output[3] + output[4]) / 4
 
-    if pred == "regular" and i <= 5:
-        plt.subplot(4, 5, 15 + i)
-        h = plt.imshow(imgshow)
-        plt.imshow(
-            np.resize(attention, (10, 10)),
-            cmap="jet",
-            alpha=transparency,
-            extent=h.get_extent(),
-            interpolation="bilinear",
-        )
-        plt.axis("off")
-        i += 1
-        if i > 5:
-            break
+    plt.subplot(4, 5, 16 + i)
+    h = plt.imshow(imgshow)
+    plt.imshow(
+        np.resize(attention, (10, 10)),
+        cmap="jet",
+        alpha=transparency,
+        extent=h.get_extent(),
+        interpolation="bilinear",
+    )
+    plt.axis("off")
 
 plt.tight_layout(pad=1.8, h_pad=0.1, w_pad=0.1)
 plt.text(0.003, 0.82, "meme", rotation=90, fontsize=14, transform=plt.gcf().transFigure)
