@@ -63,7 +63,7 @@ class DataGenerator(Sequence):
         self.var = var  # var
 
     def __len__(self):
-        return (np.ceil(len(self.files) / float(self.bsize))).astype(np.int)
+        return int(np.ceil(len(self.files) / float(self.bsize)))
 
     def __getitem__(self, idx):
         batch = self.files[idx * self.bsize : (idx + 1) * self.bsize]
