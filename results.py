@@ -24,41 +24,42 @@ print("\nTable 3:")
 print(
     f"VGG16 w/o VPU:\t\t\t",
     (np.max(vgg[9:, 9:], axis=0) * 100).round(2),
-    (np.mean(vgg[9:, 9:]) * 100).round(2),
+    f"{(np.mean(vgg[9:, 9:]) * 100).round(2)} +- {(np.std(vgg[9:, 9:]) * 100).round(2)}",
 )
 print(
     f"ResNet50 w/o VPU:\t\t",
     (np.max(rnet[9:, 9:], axis=0) * 100).round(2),
-    (np.mean(rnet[9:, 9:]) * 100).round(2),
+    f"{(np.mean(rnet[9:, 9:]) * 100).round(2)} +- {(np.std(rnet[9:, 9:]) * 100).round(2)}",
 )
 print(
-    f"EfficientNetB5 w/o VPU:\t",
+    f"EfficientNetB5 w/o VPU:\t\t",
     (np.max(eff[9:, 9:], axis=0) * 100).round(2),
-    (np.mean(eff[9:, 9:]) * 100).round(2),
+    f"{(np.mean(eff[9:, 9:]) * 100).round(2)} +- {(np.std(eff[9:, 9:]) * 100).round(2)}",
+    
 )
 print(
     f"ViT w/o VPU:\t\t\t",
     (np.max(vit[9:, 9:], axis=0) * 100).round(2),
-    (np.mean(vit[9:, 9:]) * 100).round(2),
+    f"{(np.mean(vit[9:, 9:]) * 100).round(2)} +- {(np.std(vit[9:, 9:]) * 100).round(2)}",
 )
 print(
-    f"ViTa (ours) w/o VPU:\t",
+    f"ViTa (ours) w/o VPU:\t\t",
     (np.max(vita[9:, 9:], axis=0) * 100).round(2),
-    (np.mean(vita[9:, 9:]) * 100).round(2),
+    f"{(np.mean(vita[9:, 9:]) * 100).round(2)} +- {(np.std(vita[9:, 9:]) * 100).round(2)}",
 )
 print(
     f"ViTa (ours) w/ VPU:\t\t",
     (vita[8, -4:] * 100).round(2),
-    (np.mean(vita[8, -4:]) * 100).round(2),
+    f"{(np.mean(vita[8, -4:]) * 100).round(2)} +- {(np.std(vita[8, -4:]) * 100).round(2)}"
 )
 
 
 print("\nTable 4:")
-print("VGG16", (100 * vgg).mean().round(2))
-print("ResNet", (100 * rnet).mean().round(2))
-print("EfficientNetB5", (100 * eff).mean().round(2))
-print("ViT", (100 * vit).mean().round(2))
-print("MemeTector (ours)", (100 * vita).mean().round(2))
+print(f"VGG16: {(100 * vgg).mean().round(2)} +- {(100 * vgg).std().round(2)}")
+print(f"ResNet: {(100 * rnet).mean().round(2)} +- {(100 * rnet).std().round(2)}")
+print(f"EfficientNetB5: {(100 * eff).mean().round(2)} +- {(100 * eff).std().round(2)}")
+print(f"ViT: {(100 * vit).mean().round(2)} +- {(100 * vit).std().round(2)}")
+print(f"MemeTector (ours): {(100 * vita).mean().round(2)} +- {(100 * vita).std().round(2)}")
 
 print(f"\nTable 5:")
 n = vgg.shape[0] * vgg.shape[1]
